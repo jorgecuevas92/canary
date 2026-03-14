@@ -290,6 +290,7 @@ void SpawnMonster::checkSpawnMonster() {
 		if (!mType) {
 			continue;
 		}
+		mType->info.isBlockable = g_configManager().getBoolean(PLAYER_BLOCKS_SPAWN);
 		if (!mType->canSpawn(sb.pos) || (mType->info.isBlockable && findPlayer(sb.pos))) {
 			sb.lastSpawn = OTSYS_TIME();
 			continue;
