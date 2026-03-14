@@ -108,6 +108,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, ONLY_PREMIUM_ACCOUNT, "onlyPremiumAccount", false);
 	loadBoolConfig(L, PARTY_AUTO_SHARE_EXPERIENCE, "partyAutoShareExperience", true);
 	loadBoolConfig(L, PARTY_SHARE_LOOT_BOOSTS, "partyShareLootBoosts", true);
+	loadBoolConfig(L, PLAYER_BLOCKS_SPAWN, "playerBlocksSpawn", true);
 	loadBoolConfig(L, PREY_ENABLED, "preySystemEnabled", true);
 	loadBoolConfig(L, PREY_FREE_THIRD_SLOT, "preyFreeThirdSlot", false);
 	loadBoolConfig(L, PUSH_WHEN_ATTACKING, "pushWhenAttacking", false);

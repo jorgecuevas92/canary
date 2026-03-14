@@ -546,6 +546,7 @@ bossDefaultTimeToDefeat = 20 * 60 -- 20 minutes
 defaultRespawnTime = 60
 deSpawnRange = 2
 deSpawnRadius = 50
+playerBlocksSpawn = true
 
 -- Stamina
 staminaSystem = true
