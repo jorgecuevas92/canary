@@ -2,7 +2,37 @@
 
 ### Running tests
 
-Tests can be run directly from the repository root using CMake test presets. First, configure and build tests for your platform:
+The CMake test presets assume an external `vcpkg` checkout is already
+available through `VCPKG_ROOT`. If `VCPKG_ROOT` is unset, the preset configure
+step fails before the build starts.
+
+The concrete setup commands in this section were validated on Ubuntu/Linux.
+Windows and macOS users should use the matching platform presets and adapt the
+host toolchain setup accordingly.
+
+One-time `vcpkg` bootstrap example:
+
+```bash
+git clone https://github.com/microsoft/vcpkg.git "$HOME/vcpkg"
+"$HOME/vcpkg/bootstrap-vcpkg.sh"
+export VCPKG_ROOT="$HOME/vcpkg"
+```
+
+For Linux integration tests, you also need a database available at
+`127.0.0.1:3306` with the `otservbr-global` schema. The simplest local setup is
+the bundled Docker database service:
+
+```bash
+cd docker
+cp .env.dist .env
+docker compose up -d database
+docker compose exec -T database mariadb -uroot -proot otservbr-global < data/01-test_account.sql
+docker compose exec -T database mariadb -uroot -proot otservbr-global < data/02-test_account_players.sql
+cd ..
+```
+
+Tests can then be run directly from the repository root using CMake test
+presets. First, configure and build tests for your platform:
 
 ```bash
 # Configure and build tests

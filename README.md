@@ -15,6 +15,81 @@ our [customized tools](https://docs.opentibiabr.com/opentibiabr/downloads/tools)
 - [Gitbook](https://docs.opentibiabr.com/opentibiabr/projects/canary).
 - [Wiki](https://github.com/opentibiabr/canary/wiki).
 
+## Local Setup
+
+The CMake presets in this repository assume an external `vcpkg` checkout is
+already available through `VCPKG_ROOT`. If `VCPKG_ROOT` is unset, configure
+fails early because the preset toolchain file expands to
+`$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake`.
+
+The native setup commands in this section were validated on Ubuntu/Linux. Do
+not assume the same host setup steps work unchanged on Windows. Windows users
+should use the `windows-*` CMake presets and a Windows-native toolchain.
+
+Typical Linux prerequisites:
+
+- CMake 3.24 or newer
+- Ninja
+- Git
+- GCC/G++ 11 or newer
+- Docker with the Compose v2 plugin if you want local database and login
+  services
+
+One-time `vcpkg` bootstrap:
+
+```bash
+git clone https://github.com/microsoft/vcpkg.git "$HOME/vcpkg"
+"$HOME/vcpkg/bootstrap-vcpkg.sh"
+export VCPKG_ROOT="$HOME/vcpkg"
+```
+
+For contributor work, the practical low-friction setup is:
+
+- Docker Compose for `database` and `login`
+- native CMake build for the `canary` server binary
+
+Quick start:
+
+```bash
+cd docker
+cp .env.dist .env
+docker compose up -d database login
+
+cd ..
+cmake --preset linux-release
+cmake --build --preset linux-release
+./canary
+```
+
+Notes:
+
+- `./canary` creates `config.lua` from `config.lua.dist` if needed.
+- Prefer `./canary` for the first host-native launch. `./start.sh` rewrites
+  `config.lua` from `docker/.env`, which is convenient inside Docker but can
+  point the native binary at container-only hostnames like `database`.
+- The compose-defined `server` service is useful for containerized workflows,
+  but it is not the simplest first-time contributor path because
+  `docker/Dockerfile.dev` expects the vcpkg feed configuration used by CI.
+
+## Logging In Locally
+
+The default runtime config listens on `127.0.0.1`, login port `7171`, and game
+port `7172`. When the bundled `login` service is running, use:
+
+- login URL: `http://127.0.0.1:8080/login.php`
+- direct server host: `127.0.0.1`
+- direct game port: `7172`
+
+The bootstrap database from `schema.sql` creates a default account:
+
+- email/login: `@god`
+- password: `god`
+
+If your client expects an account name instead of an email, try `god` /
+`god`. The bootstrap account includes sample characters such as
+`Sorcerer Sample`, `Druid Sample`, `Paladin Sample`, `Knight Sample`,
+`Monk Sample`, and `GOD`.
+
 ## Running Tests
 
 Tests can be run directly from the repository root using CMake test presets:

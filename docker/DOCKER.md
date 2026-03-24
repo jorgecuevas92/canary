@@ -1,37 +1,109 @@
-# Getting Started with docker
+# Docker
 
-## - Requirements
-- Docker 19 and docker-compose 1.17
-- Execute the script root directory /docker/data/download-myaac.sh
-- To use global ip change the login.py on world to use that ip and
-also change in config.lua.dist
-- Client pointing to http://<ip>:8080/login.php
+## Requirements
 
-### Default Values (docker-compose.yml)
-- Ports: 7171, 7172, 80(web), 3306, 8080(login)
-- Database Server: database
-- Database Name/User/Password: otserver
+- Docker Engine
+- Docker Compose v2
 
-### - Commands
-To compile and start database, webserver and otserver just run
+Run the commands in this guide from the `docker/` directory unless noted
+otherwise.
+
+## What the current compose file does
+
+`docker-compose.yml` defines three services:
+
+- `database`
+  - MariaDB
+  - imports `../schema.sql` on the first startup of an empty volume
+- `login`
+  - the external login service
+  - exposes HTTP on `8080` and gRPC on `9090`
+- `server`
+  - builds Canary from `docker/Dockerfile.dev`
+
+## Recommended local usage
+
+For contributor work, the practical path is:
+
+- use Docker for `database` and `login`
+- build and run the `canary` server binary natively from the repository root
+
+The Docker commands in this file are generally portable, but the native build
+commands shown alongside them were validated on Ubuntu/Linux. Windows users
+should not assume the same host-native setup steps apply unchanged.
+
+One-time setup:
+
+```bash
+cp .env.dist .env
+docker compose up -d database login
 ```
-$ docker-compose up -d
-```
-Sometimes the server will not start due to database take too long to start
-so you can restart it
-```
-docker-compose restart otserver
 
-or
+Then, from the repository root:
 
-docker-compose stop otserver
-docker-compose start otserver
+```bash
+cmake --preset linux-release
+cmake --build --preset linux-release
+./canary
 ```
 
-To compile your changes in otserver, just stop and start
-```
-$ docker-compose up -d --build otserver
+This keeps the stateful services reproducible without forcing every local edit
+and rebuild through Docker.
+
+## Why the native server is the default local recommendation
+
+The compose-defined `server` service builds through `docker/Dockerfile.dev`.
+That Dockerfile expects the vcpkg feed configuration used by CI, including a
+`github_token` build secret. If you do not already have that setup, `server`
+is not the smoothest first-time local workflow.
+
+Use the `server` service when you explicitly want to validate the containerized
+build path or when you already have the required feed credentials.
+
+## Login and bootstrap credentials
+
+Default local endpoints:
+
+- login URL: `http://127.0.0.1:8080/login.php`
+- login gRPC: `127.0.0.1:9090`
+- game server: `127.0.0.1:7172`
+- login protocol: `127.0.0.1:7171`
+
+The bootstrap schema creates a default account:
+
+- email/login: `@god`
+- password: `god`
+
+If your client expects an account name instead of an email, try `god` /
+`god`.
+
+The bootstrap account includes the sample characters from `schema.sql`.
+
+## Optional sample test accounts
+
+If you want the extra bundled test accounts and characters:
+
+```bash
+docker compose exec -T database mariadb -uroot -proot otservbr-global < data/01-test_account.sql
+docker compose exec -T database mariadb -uroot -proot otservbr-global < data/02-test_account_players.sql
 ```
 
-### - Observations
-- The data folder persist db and webserver data;
+These add accounts like `test1`, `test2`, and `dawn`. The bundled password hash
+matches `test`.
+
+## Useful commands
+
+```bash
+docker compose ps
+docker compose logs -f database login
+docker compose down
+```
+
+To reset the database volume completely:
+
+```bash
+docker compose down -v
+```
+
+Remember that `schema.sql` is imported automatically only on the first startup
+of a fresh database volume.
