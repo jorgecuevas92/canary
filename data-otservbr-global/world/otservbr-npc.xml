@@ -3019,4 +3019,16 @@
 	<npc centerx="33587" centery="32966" centerz="15" radius="1">
 		<npc name="Gnomish Operative (Raiders)" x="0" y="0" z="15" spawntime="60" />
 	</npc>
+	<npc centerx="32342" centery="32220" centerz="7" radius="1">
+		<npc name="Nahualli" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32931" centery="32074" centerz="7" radius="1">
+		<npc name="Nahualli" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33126" centery="32842" centerz="7" radius="1">
+		<npc name="Nahualli" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32793" centery="31248" centerz="7" radius="1">
+		<npc name="Nahualli" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 </npcs>
