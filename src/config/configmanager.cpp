@@ -80,6 +80,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, AIMBOT_HOTKEY_ENABLED, "hotkeyAimbotEnabled", true);
 	loadBoolConfig(L, ALLOW_CHANGEOUTFIT, "allowChangeOutfit", true);
 	loadBoolConfig(L, ALLOW_RELOAD, "allowReload", false);
+	loadBoolConfig(L, ALWAYS_SPAWN_YASIR, "alwaysSpawnYasir", false);
 	loadBoolConfig(L, AUTOBANK, "autoBank", false);
 	loadBoolConfig(L, AUTOLOOT, "autoLoot", false);
 	loadBoolConfig(L, BOOSTED_BOSS_SLOT, "boostedBossSlot", true);
