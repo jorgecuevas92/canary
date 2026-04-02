@@ -279,6 +279,7 @@ onlyPremiumAccount = false
 -- NOTE: if showLootsInBestiary is true, will cause all loots to be shown in the bestiary even if the player has not reached the required number of kills
 -- NOTE: minTownIdToBankTransferFromMain blocks towns less than defined from receiving money transfers
 -- NOTE: enableSupportOutfit enable GODS and GMS to select support outfit (gamemaster, customer support or community manager)
+-- NOTE: alwaysSpawnYasir = true makes the Yasir world change chance 100%
 depotChest = 4
 autoLoot = false
 autoBank = false
@@ -298,6 +299,7 @@ startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
 enableSupportOutfit = true
+alwaysSpawnYasir = false
 
 -- NOTE: stashMoving = true, stow an container inside your stash
 -- NOTE: stashManageAmount = max items add/remove from stash at once

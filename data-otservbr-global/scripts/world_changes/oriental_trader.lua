@@ -39,8 +39,13 @@ local orientalTrader = GlobalEvent("Oriental Trader")
 
 function orientalTrader.onStartup()
 	local message = "Yasir: not spawned today"
+	local spawnChance = config.spawnChance
 
-	if config.enableSpawn and math.random(100) <= config.spawnChance then
+	if configManager.getBoolean(configKeys.ALWAYS_SPAWN_YASIR) then
+		spawnChance = 100
+	end
+
+	if config.enableSpawn and math.random(100) <= spawnChance then
 		local randTown = config.towns[math.random(#config.towns)]
 		if not randTown then
 			return false
